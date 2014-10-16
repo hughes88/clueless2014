@@ -37,7 +37,6 @@ public class ClueGameUI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel3 = new javax.swing.JPanel();
@@ -69,21 +68,22 @@ public class ClueGameUI extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jToggleButton1 = new javax.swing.JToggleButton();
+        jLabel11 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jToggleButton2 = new javax.swing.JToggleButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jToggleButton2 = new javax.swing.JToggleButton();
+        jPanel5 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Clueless");
         setMaximumSize(new java.awt.Dimension(2147483647, 400));
-        setPreferredSize(new java.awt.Dimension(729, 670));
         setResizable(false);
 
         jPanel3.setMaximumSize(new java.awt.Dimension(2147483647, 400));
@@ -159,11 +159,8 @@ public class ClueGameUI extends javax.swing.JFrame {
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/characterImages/ColonelMustard.png"))); // NOI18N
         jLabel3.setPreferredSize(new java.awt.Dimension(175, 233));
 
+        buttonGroup2.add(jToggleButton4);
         jToggleButton4.setText("Next");
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jRadioButton1, org.jdesktop.beansbinding.ELProperty.create("${selected}"), jToggleButton4, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
         jToggleButton4.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton4ItemStateChanged(evt);
@@ -341,29 +338,39 @@ public class ClueGameUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel11.setText("Technical Page for Server Communication..Wont be used in Game");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(193, 193, 193)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton4)
-                        .addGap(51, 51, 51)
-                        .addComponent(jToggleButton1))
+                        .addGap(193, 193, 193)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton4)
+                                .addGap(51, 51, 51)
+                                .addComponent(jToggleButton1))
+                            .addComponent(jButton2)
+                            .addComponent(jButton1)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(171, 171, 171)
+                                .addComponent(jButton3)
+                                .addGap(98, 98, 98)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addGap(98, 98, 98)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
-                .addContainerGap(236, Short.MAX_VALUE))
+                        .addGap(180, 180, 180)
+                        .addComponent(jLabel11)))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(135, 135, 135)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel11)
+                .addGap(96, 96, 96)
                 .addComponent(jButton1)
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -375,7 +382,7 @@ public class ClueGameUI extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(jToggleButton1))
-                .addContainerGap(404, Short.MAX_VALUE))
+                .addContainerGap(380, Short.MAX_VALUE))
         );
 
         jPanel3.add(jPanel1, "card2");
@@ -383,13 +390,6 @@ public class ClueGameUI extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.setMaximumSize(new java.awt.Dimension(32767, 400));
         jPanel2.setPreferredSize(new java.awt.Dimension(729, 670));
-
-        jToggleButton2.setText("jToggleButton2");
-        jToggleButton2.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton2ItemStateChanged(evt);
-            }
-        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -433,50 +433,6 @@ public class ClueGameUI extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(6).setMinWidth(40);
             jTable1.getColumnModel().getColumn(6).setPreferredWidth(40);
             jTable1.getColumnModel().getColumn(6).setMaxWidth(40);
-        }
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "WEAPONS", "P1", "P2", "P3", "P4", "P5", "P6"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setMinWidth(80);
-            jTable2.getColumnModel().getColumn(0).setPreferredWidth(80);
-            jTable2.getColumnModel().getColumn(0).setMaxWidth(80);
-            jTable2.getColumnModel().getColumn(1).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(1).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(1).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(2).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(2).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(2).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(3).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(3).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(3).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(4).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(4).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(4).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(5).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(5).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(5).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(6).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(6).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(6).setMaxWidth(40);
         }
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
@@ -526,39 +482,122 @@ public class ClueGameUI extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel10.setText("Scorecard");
 
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "WEAPONS", "P1", "P2", "P3", "P4", "P5", "P6"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTable2);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(0).setMinWidth(80);
+            jTable2.getColumnModel().getColumn(0).setPreferredWidth(80);
+            jTable2.getColumnModel().getColumn(0).setMaxWidth(80);
+            jTable2.getColumnModel().getColumn(1).setMinWidth(40);
+            jTable2.getColumnModel().getColumn(1).setPreferredWidth(40);
+            jTable2.getColumnModel().getColumn(1).setMaxWidth(40);
+            jTable2.getColumnModel().getColumn(2).setMinWidth(40);
+            jTable2.getColumnModel().getColumn(2).setPreferredWidth(40);
+            jTable2.getColumnModel().getColumn(2).setMaxWidth(40);
+            jTable2.getColumnModel().getColumn(3).setMinWidth(40);
+            jTable2.getColumnModel().getColumn(3).setPreferredWidth(40);
+            jTable2.getColumnModel().getColumn(3).setMaxWidth(40);
+            jTable2.getColumnModel().getColumn(4).setMinWidth(40);
+            jTable2.getColumnModel().getColumn(4).setPreferredWidth(40);
+            jTable2.getColumnModel().getColumn(4).setMaxWidth(40);
+            jTable2.getColumnModel().getColumn(5).setMinWidth(40);
+            jTable2.getColumnModel().getColumn(5).setPreferredWidth(40);
+            jTable2.getColumnModel().getColumn(5).setMaxWidth(40);
+            jTable2.getColumnModel().getColumn(6).setMinWidth(40);
+            jTable2.getColumnModel().getColumn(6).setPreferredWidth(40);
+            jTable2.getColumnModel().getColumn(6).setMaxWidth(40);
+        }
+
+        jToggleButton2.setText("jToggleButton2");
+        jToggleButton2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jToggleButton2ItemStateChanged(evt);
+            }
+        });
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
+
+        jPanel5.setBackground(new java.awt.Color(51, 255, 0));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 678, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 385, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addComponent(jToggleButton2)
+                                .addGap(40, 40, 40)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(279, 279, 279)
+                                .addComponent(jLabel10)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(108, 108, 108)
-                .addComponent(jLabel10)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jToggleButton2)
+                        .addGap(153, 153, 153))))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -567,26 +606,19 @@ public class ClueGameUI extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
-                .addComponent(jToggleButton2)
-                .addGap(132, 132, 132))
+                .addGap(0, 21, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(195, 195, 195)
-                        .addComponent(jToggleButton2)))
-                .addContainerGap(270, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanel3.add(jPanel2, "card3");
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -601,12 +633,13 @@ public class ClueGameUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void jToggleButton4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton4ItemStateChanged
-        // TODO add your handling code here:
+        // TODO add your handling code here:        
         itemStateChanged(evt);
     }//GEN-LAST:event_jToggleButton4ItemStateChanged
 
     private void jToggleButton2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton2ItemStateChanged
         // TODO add your handling code here:
+        CreateBoard();
         itemStateChanged(evt);
     }//GEN-LAST:event_jToggleButton2ItemStateChanged
 
@@ -645,7 +678,18 @@ public class ClueGameUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void CreateBoard() {
+        Board gameBoard = new Board();
+        System.out.println("JToggleButton2 Action Performed");
+        jPanel3.add(gameBoard,"card4");
+    }
+
     public void itemStateChanged(ItemEvent evt) {
+        System.out.println(evt.getSource().toString());
         CardLayout cl = (CardLayout) (jPanel3.getLayout());
         cl.next(jPanel3);
         //show(jPanel3, (String)evt.getItem());
@@ -731,6 +775,7 @@ public class ClueGameUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -743,6 +788,7 @@ public class ClueGameUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
@@ -762,6 +808,5 @@ public class ClueGameUI extends javax.swing.JFrame {
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
