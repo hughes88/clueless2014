@@ -115,7 +115,7 @@ public class Server extends javax.swing.JFrame {
         System.out.println("Server started");
 
         try {
-            ServerSocket serverSocket = new ServerSocket(8888);
+            final ServerSocket serverSocket = new ServerSocket(8888);
             System.out.println("Server started");
             Thread createClientSocket = new Thread() {
                 public void run() {
