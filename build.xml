@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<project name="Clueless Server" default="testsuite">
+
+ <property name="project.name" value="Clueless Server"/>
+ <property name="src.dir" value="Server/src"/>  
+  <property name="lib.dir" value="Server/lib"/>
+  <property name="test.dir" value="test/src"/>
+  <property name="test.lib.dir" value="test/lib"/>
+  <property name="target.dir" value="target"/>
+  <property name="classes.dir" value="${target.dir}/classes"/>
+  <property name="junit.out.dir.xml"  value="${target.dir}/report/junit/xml"/>
+  <property name="junit.out.dir.html" value="${target.dir}/report/junit/html"/>
+
+  <target name="clean" description="Delete earlier classes">
+    <echo>Cleaning classes dir...</echo>
+    <delete dir="${target.dir}" quiet="yes"/>
+  </target>
+
+  <target name="makedir" depends="clean" description="Create required directories">
+    <echo>Making required directories...</echo>
+    <mkdir dir="${classes.dir}"/>
+    <mkdir dir="${target.dir}"/>
+  </target>
+
+  <target name="compile" depends="makedir" description="Compile java code.">
+    <echo>Compiling source</echo>
+    <javac debug="true" destdir="${classes.dir}">
+      <src path="${src.dir}"/>
+      <classpath>
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="compile-test" depends="makedir,compile" description="Compile java test code.">
+    <echo>Compiling test source</echo>
+    <javac debug="true" destdir="${classes.dir}">
+      <src path="${test.dir}"/>
+      <classpath>
+        <pathelement location="${classes.dir}"/>
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        <fileset dir="${test.lib.dir}" includes="**/*.jar"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <path id="classpath.test">
+      <path path="${java.class.path}"/>
+      <pathelement location="${classes.dir}"/>
+      <fileset dir="${lib.dir}" includes="**/*.jar"/>
+  </path>
+
+  <target name="testsuite" depends="compile-test, compile" description="Running Test Suite">
+     <echo>Running junit test suite...</echo>
+     <delete dir="${junit.out.dir.xml}"/>
+     <mkdir  dir="${junit.out.dir.xml}"/>
+     <junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">
+       <classpath refid="classpath.test"/>
+       <sysproperty key="ant.home" value="${ant.home}"/>
+       <formatter type="xml"/>
+       <batchtest fork="yes" todir="${junit.out.dir.xml}">
+         <fileset dir="${classes.dir}" includes="**/*Test.class"/>
+       </batchtest>
+     </junit>
+  </target>
+</project>
+
