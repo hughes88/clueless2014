@@ -10,14 +10,19 @@ package game.Clue;
  * @author Mario
  */
 public interface Room {
+    String occupant=null;
+      
     
-    public String RoomName(String name);
+    String getRoomName();
+    void setRoomName(String name);
     
-    public int numberOfOccupents(int occupants);
+    int numberOfOccupents(int occupants);
     
-    public void allowEntry();
+    String Color();
+    
+    boolean allowEntry();
             
-    public void removePlayer();
+    String removePlayer(String name);
     
    
     
