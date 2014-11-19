@@ -19,13 +19,15 @@ import org.json.JSONObject;
  * @author Mario
  */
 public class JerseyClient {
-    public static void main(String[] args) {
+    //public static void main(String[] args) {
+    public JerseyClient(){
         String string = "";
         try {
- 
+            System.out.println("jerseyclient started");
+            String username="Mario";
             // Step1: Let's 1st read file from fileSystem
             InputStream crunchifyInputStream = new FileInputStream(
-                    "/Users/<username>/Documents/crunchify-git/JSONFile.txt");
+                    "/Users/"+username+"/Documents/JsonTest/JSONFile.txt");
             InputStreamReader crunchifyReader = new InputStreamReader(crunchifyInputStream);
             BufferedReader br = new BufferedReader(crunchifyReader);
             String line;

@@ -611,6 +611,11 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         });
 
         jButton4.setText("jButton4");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -800,6 +805,12 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         // TODO add your handling code here:
         String s=(String)JOptionPane.showInputDialog(this,"Who do you think is the murderer?","Solved It???",JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        
+      JerseyClient client=new JerseyClient();  
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     private void CreateBoard() {
         NonCornerRoom NonCornerRoom_current;
