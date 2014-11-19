@@ -10,6 +10,7 @@
   <property name="classes.dir" value="${target.dir}/classes"/>
   <property name="junit.out.dir.xml"  value="${target.dir}/report/junit/xml"/>
   <property name="junit.out.dir.html" value="${target.dir}/report/junit/html"/>
+  <property file="build.properties"/>
 
   <target name="clean" description="Delete earlier classes">
     <echo>Cleaning classes dir...</echo>
