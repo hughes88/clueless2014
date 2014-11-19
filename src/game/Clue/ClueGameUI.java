@@ -5,22 +5,52 @@
  */
 package game.Clue;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.awt.dnd.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.TransferHandler;
+import javax.swing.border.Border;
 
 /**
  *
  * @author Mario
  */
-public class ClueGameUI extends javax.swing.JFrame {
+public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListener, MouseListener {
 
-    public Socket clientConnect;
+    public static Socket clientConnect;
+    public static BufferedReader stdIn; //used for sending test input to server
+    public static String identifyServer;
+    public static javax.swing.JLabel player = new JLabel();
+    public JPanel gameBoard;
+    public int xAdjustment;
+    public int yAdjustment;
 
     /**
      * Creates new form ClueGameUI
@@ -41,11 +71,12 @@ public class ClueGameUI extends javax.swing.JFrame {
         buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel3 = new javax.swing.JPanel();
         LoginPanel = new javax.swing.JPanel();
-        jTextField2 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jPasswordField1 = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
         jToggleButton3 = new javax.swing.JToggleButton();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        jLabel12 = new javax.swing.JLabel();
         CharacterSelectionPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jToggleButton4 = new javax.swing.JToggleButton();
@@ -63,12 +94,16 @@ public class ClueGameUI extends javax.swing.JFrame {
         jRadioButton6 = new javax.swing.JRadioButton();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
         jToggleButton1 = new javax.swing.JToggleButton();
         jLabel11 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -78,8 +113,10 @@ public class ClueGameUI extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jToggleButton2 = new javax.swing.JToggleButton();
         jPanel5 = new javax.swing.JPanel();
+        jLayeredPane5 = new javax.swing.JLayeredPane();
+        jButton2 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Clueless");
@@ -90,16 +127,38 @@ public class ClueGameUI extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.CardLayout());
 
         LoginPanel.setBackground(new java.awt.Color(51, 51, 51));
+        LoginPanel.setForeground(new java.awt.Color(255, 153, 153));
         LoginPanel.setMaximumSize(new java.awt.Dimension(32767, 400));
         LoginPanel.setPreferredSize(new java.awt.Dimension(729, 670));
+        LoginPanel.setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Username");
+        LoginPanel.add(jLabel1);
+        jLabel1.setBounds(20, 600, 58, 14);
+
+        jTextField2.setMaximumSize(new java.awt.Dimension(6, 20));
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+        LoginPanel.add(jTextField2);
+        jTextField2.setBounds(100, 590, 110, 20);
+
+        jPasswordField1.setForeground(new java.awt.Color(51, 0, 255));
+        jPasswordField1.setEchoChar('*');
+        jPasswordField1.setMinimumSize(new java.awt.Dimension(25, 20));
+        jPasswordField1.setName(""); // NOI18N
+        LoginPanel.add(jPasswordField1);
+        jPasswordField1.setBounds(100, 620, 110, 20);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Password");
+        LoginPanel.add(jLabel2);
+        jLabel2.setBounds(20, 624, 54, 20);
 
         jToggleButton3.setText("Login");
         jToggleButton3.addItemListener(new java.awt.event.ItemListener() {
@@ -107,47 +166,21 @@ public class ClueGameUI extends javax.swing.JFrame {
                 jToggleButton3ItemStateChanged(evt);
             }
         });
-
-        jPasswordField1.setEchoChar('*');
-        jPasswordField1.setMinimumSize(new java.awt.Dimension(25, 20));
-        jPasswordField1.setName(""); // NOI18N
-        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField1ActionPerformed(evt);
+                jToggleButton3ActionPerformed(evt);
             }
         });
+        LoginPanel.add(jToggleButton3);
+        jToggleButton3.setBounds(120, 640, 70, 23);
 
-        javax.swing.GroupLayout LoginPanelLayout = new javax.swing.GroupLayout(LoginPanel);
-        LoginPanel.setLayout(LoginPanelLayout);
-        LoginPanelLayout.setHorizontalGroup(
-            LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginPanelLayout.createSequentialGroup()
-                .addContainerGap(272, Short.MAX_VALUE)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(247, 247, 247))
-        );
-        LoginPanelLayout.setVerticalGroup(
-            LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginPanelLayout.createSequentialGroup()
-                .addContainerGap(380, Short.MAX_VALUE)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(38, 38, 38)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(38, 38, 38)
-                .addComponent(jToggleButton3)
-                .addGap(175, 175, 175))
-        );
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/logo-login3.jpg"))); // NOI18N
+        jLabel12.setText("jLabel12");
+        jLabel12.setMaximumSize(new java.awt.Dimension(729, 670));
+        jLabel12.setMinimumSize(new java.awt.Dimension(729, 670));
+        jLabel12.setPreferredSize(new java.awt.Dimension(729, 670));
+        LoginPanel.add(jLabel12);
+        jLabel12.setBounds(0, 0, 729, 670);
 
         jPanel3.add(LoginPanel, "card4");
 
@@ -164,6 +197,11 @@ public class ClueGameUI extends javax.swing.JFrame {
         jToggleButton4.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton4ItemStateChanged(evt);
+            }
+        });
+        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton4ActionPerformed(evt);
             }
         });
 
@@ -291,42 +329,21 @@ public class ClueGameUI extends javax.swing.JFrame {
         jPanel1.setMaximumSize(new java.awt.Dimension(32767, 400));
         jPanel1.setPreferredSize(new java.awt.Dimension(729, 670));
 
-        jButton1.setText("Connect");
+        jButton1.setText("Connect to Server");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("ShowServerPage");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("Send Message to Clent");
+        jButton3.setText("Send Message to Server");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
-        jTextField1.setText("jTextField1");
-
-        jButton4.setText("jButton4");
-        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton4MouseClicked(evt);
-            }
-        });
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        jToggleButton1.setText("jToggleButton1");
+        jToggleButton1.setText("Go To Gameboard");
         jToggleButton1.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton1ItemStateChanged(evt);
@@ -340,6 +357,18 @@ public class ClueGameUI extends javax.swing.JFrame {
 
         jLabel11.setText("Technical Page for Server Communication..Wont be used in Game");
 
+        jTextField3.setText("192.168.1.8");
+
+        jLabel13.setText("IP address:");
+
+        jLabel14.setText("Port:");
+
+        jTextField4.setText("8888");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane4.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -347,42 +376,53 @@ public class ClueGameUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(193, 193, 193)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton4)
-                                .addGap(51, 51, 51)
-                                .addComponent(jToggleButton1))
-                            .addComponent(jButton2)
-                            .addComponent(jButton1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(171, 171, 171)
-                                .addComponent(jButton3)
-                                .addGap(98, 98, 98)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(180, 180, 180)
-                        .addComponent(jLabel11)))
-                .addContainerGap(65, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jToggleButton1)
+                            .addComponent(jLabel11)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addGap(42, 42, 42)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel13)
+                                    .addComponent(jLabel14))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(247, 247, 247)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton3)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(211, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jLabel11)
-                .addGap(96, 96, 96)
-                .addComponent(jButton1)
-                .addGap(10, 10, 10)
+                .addGap(101, 101, 101)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel14)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(8, 8, 8)
+                .addComponent(jToggleButton1)
+                .addGap(41, 41, 41)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addGap(42, 42, 42)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jToggleButton1))
-                .addContainerGap(380, Short.MAX_VALUE))
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton3)
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
         jPanel3.add(jPanel1, "card2");
@@ -391,6 +431,7 @@ public class ClueGameUI extends javax.swing.JFrame {
         jPanel2.setMaximumSize(new java.awt.Dimension(32767, 400));
         jPanel2.setPreferredSize(new java.awt.Dimension(729, 670));
 
+        jTable1.setBackground(new java.awt.Color(153, 255, 0));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -435,6 +476,7 @@ public class ClueGameUI extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(6).setMaxWidth(40);
         }
 
+        jTable3.setBackground(new java.awt.Color(153, 255, 0));
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -482,6 +524,7 @@ public class ClueGameUI extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel10.setText("Scorecard");
 
+        jTable2.setBackground(new java.awt.Color(153, 255, 0));
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -526,30 +569,48 @@ public class ClueGameUI extends javax.swing.JFrame {
             jTable2.getColumnModel().getColumn(6).setMaxWidth(40);
         }
 
-        jToggleButton2.setText("jToggleButton2");
-        jToggleButton2.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton2ItemStateChanged(evt);
-            }
-        });
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
-            }
-        });
+        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
 
-        jPanel5.setBackground(new java.awt.Color(51, 255, 0));
+        javax.swing.GroupLayout jLayeredPane5Layout = new javax.swing.GroupLayout(jLayeredPane5);
+        jLayeredPane5.setLayout(jLayeredPane5Layout);
+        jLayeredPane5Layout.setHorizontalGroup(
+            jLayeredPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 701, Short.MAX_VALUE)
+        );
+        jLayeredPane5Layout.setVerticalGroup(
+            jLayeredPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 352, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 678, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLayeredPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(186, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 385, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLayeredPane5)
+                .addContainerGap())
         );
+
+        jLayeredPane5.addMouseListener(this);
+        jLayeredPane5.addMouseMotionListener(this);
+        jLayeredPane5.add(player,JLayeredPane.DRAG_LAYER);
+
+        jButton2.setText("Make Accusation");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("jButton4");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -559,24 +620,23 @@ public class ClueGameUI extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(jToggleButton2)
-                                .addGap(40, 40, 40)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(279, 279, 279)
-                                .addComponent(jLabel10)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(323, 323, 323)
+                        .addComponent(jLabel10))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                            .addGap(50, 50, 50)
+                            .addComponent(jButton2)
+                            .addGap(75, 75, 75)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(33, 33, 33)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -586,18 +646,23 @@ public class ClueGameUI extends javax.swing.JFrame {
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                .addComponent(jButton4)
+                                .addGap(33, 33, 33)))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(jToggleButton2)
-                        .addGap(153, 153, 153))))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jButton2)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -606,7 +671,7 @@ public class ClueGameUI extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 21, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -623,25 +688,68 @@ public class ClueGameUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jToggleButton3ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton3ItemStateChanged
-        // TODO add your handling code here:
-        itemStateChanged(evt);
-    }//GEN-LAST:event_jToggleButton3ItemStateChanged
+    public void mouseDragged(MouseEvent me) {
+        if (player == null) {
+            return;
+        }
+        player.setLocation(me.getX() + xAdjustment, me.getY() + yAdjustment);
+    }
 
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
+    /*
+     **  Drop the chess piece back onto the chess board
+     */
+    public void mouseReleased(MouseEvent e) {
+        if (player == null) {
+            return;
+        }
+        player.setVisible(false);
+        Component c = jPanel5.findComponentAt(e.getX(), e.getY());
+
+        if (c instanceof JLabel) {
+            Container parent = c.getParent();
+            parent.remove(0);
+            parent.add(player);
+        } else {
+            Container parent = (Container) c;
+            parent.add(player);
+        }
+
+        player.setVisible(true);
+    }
+
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    public void mouseMoved(MouseEvent e) {
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
+    }
+
+    public void mousePressed(MouseEvent e) {
+        //player=null;
+        Component c = gameBoard.findComponentAt(e.getX(), e.getY());
+        if (c instanceof JPanel) {
+            return;
+        }
+
+        Point parentLocation = c.getParent().getLocation();
+        xAdjustment = parentLocation.x - e.getX();
+        yAdjustment = parentLocation.y - e.getY();
+        player = (JLabel) c;
+        player.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
+        player.setSize(player.getWidth(), player.getHeight());
+        jLayeredPane5.add(player, JLayeredPane.DRAG_LAYER);
+
+    }
 
     private void jToggleButton4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton4ItemStateChanged
         // TODO add your handling code here:        
         itemStateChanged(evt);
     }//GEN-LAST:event_jToggleButton4ItemStateChanged
-
-    private void jToggleButton2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton2ItemStateChanged
-        // TODO add your handling code here:
-        CreateBoard();
-        itemStateChanged(evt);
-    }//GEN-LAST:event_jToggleButton2ItemStateChanged
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // TODO add your handling code here:
@@ -650,42 +758,112 @@ public class ClueGameUI extends javax.swing.JFrame {
     private void jToggleButton1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton1ItemStateChanged
         // TODO add your handling code here:
         itemStateChanged(evt);
+        CreateBoard();
     }//GEN-LAST:event_jToggleButton1ItemStateChanged
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+        sendMsgToServer(clientConnect, jTextField1.getText());
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         System.out.println("Button Pressed");
         try {
-            ConnectToServer();
+
+            ConnectToServer(jTextField3.getText(), Integer.parseInt(jTextField4.getText()));
         } catch (IOException ex) {
             Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
+
+    private void jToggleButton3ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton3ItemStateChanged
+        // TODO add your handling code here:
+        itemStateChanged(evt);
+    }//GEN-LAST:event_jToggleButton3ItemStateChanged
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String s=(String)JOptionPane.showInputDialog(this,"Who do you think is the murderer?","Solved It???",JOptionPane.PLAIN_MESSAGE);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void CreateBoard() {
-        Board gameBoard = new Board();
+        NonCornerRoom NonCornerRoom_current;
+        // Board gameBoard = new Board();
+
+        ArrayList<String> RoomNames = new ArrayList<>(Arrays.asList("Hall", "Library", "BillardRoom", "BallRoom", "DiningRoom"));
+        //RoomNames=["Hall","Library","BillardRoom","BallRoom","DiningRoom"];
+        ArrayList<NonCornerRoom> NonCornerRooms = new ArrayList<>(Arrays.asList(
+                new NonCornerRoom(""),
+                new NonCornerRoom(""),
+                new NonCornerRoom(""),
+                new NonCornerRoom("")));
+        for (int i = 0; i < 4; i++) {
+            NonCornerRoom_current = NonCornerRooms.get(i);
+            NonCornerRoom_current.setRoomName(RoomNames.get(i));
+            System.out.println("jlayer=" + NonCornerRoom_current.getRoomName());
+
+        }
+
+        gameBoard = new JPanel();
+        jLayeredPane5.add(gameBoard, JLayeredPane.DEFAULT_LAYER);
+        gameBoard.setLayout(new GridLayout(5, 5));
+        gameBoard.setPreferredSize(new Dimension(701, 352));
+        gameBoard.setBounds(0, 0, 701, 352);
+        Border roomBoarder=BorderFactory.createLineBorder(Color.black, 2);
+        //draw rooms onto board
+        for (int i = 0; i < 25; i++) {
+            JPanel room_square = new JPanel(new BorderLayout());
+
+            gameBoard.add(room_square);
+
+            int row = (i / 12) % 2;
+            if (row == 0) {
+                room_square.setBackground(i % 2 == 0 ? Color.white : Color.gray);
+                room_square.setBorder(roomBoarder);
+                //room_square.
+                //room_square.add(new JLabel("Room# "+i));
+            } else {
+                room_square.setBackground(i % 2 == 0 ? Color.gray : Color.white);
+                room_square.setBorder(roomBoarder);
+                //room_square.add(new JLabel("Room# "+i));
+            }
+
+        }
+
+        //add Players to board
+        ImageIcon player_icon = new ImageIcon(getClass().getResource("/resources/game-ball.png"));
+        JPanel panel = (JPanel) gameBoard.getComponent(0);
+
+        player.setIcon(player_icon);
+        //jPanel5.repaint();
+        panel.add(player);
+        panel.repaint();
+        jLayeredPane5.add(panel, JLayeredPane.DRAG_LAYER);
+        
+        
+        //jPanel5.add(jLayeredPane1);
+
+        //jPanel5.repaint();
+        jPanel5.setVisible(true);
+
         System.out.println("JToggleButton2 Action Performed");
-        jPanel3.add(gameBoard,"card4");
+        //jPanel3.add(gameBoard, "card4");
+
     }
 
     public void itemStateChanged(ItemEvent evt) {
@@ -731,36 +909,76 @@ public class ClueGameUI extends javax.swing.JFrame {
         });
     }
 
-    public void ConnectToServer() throws IOException {
+    public void ReceiveMsgFromServer() {
 
-        Server connection = new Server();
+        try {
+            BufferedReader in
+                    = new BufferedReader(
+                            new InputStreamReader(clientConnect.getInputStream()));
 
-        Thread one = new Thread() {
-            public void run() {
-                try {
-                    //connection.AcceptNewConnection("10.12.12.1");
-                    clientConnect = new Socket("192.168.1.7", 8888);
-                    System.out.println(clientConnect.getOutputStream());
+            while (true) {
 
-                } catch (IOException ex) {
-                    Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                jTextArea1.append("\n" + "From Server:" + in.readLine());
             }
-        };
-        one.start();
+        } catch (IOException ex) {
+            Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        PrintWriter out = new PrintWriter(clientConnect.getOutputStream(), true);
-        BufferedReader in
-                = new BufferedReader(
-                        new InputStreamReader(clientConnect.getInputStream()));
-        BufferedReader stdIn
-                = new BufferedReader(
-                        new InputStreamReader(System.in));
+    }
 
-        String userInput = "Hello";
+    private void sendMsgToServer(Socket clientSocket, String msg) {
 
-        out.println(userInput);
-        System.out.println("echo: " + in.readLine());
+        try {
+            PrintWriter out
+                    = new PrintWriter(clientSocket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(clientSocket.getInputStream()));
+
+            out.println(msg);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void ConnectToServer(String customIP, int customPort) throws IOException {
+        /*
+         Establish a connection to the Server
+         */
+
+        boolean Server_running = false;
+        if (Server_running == false) {
+
+            Server connection = new Server();
+            Server_running = true;
+            Thread one = new Thread() {
+                public void run() {
+                    try {
+                        //connection.AcceptNewConnection("10.12.12.1");
+                        System.out.print("Connecting to Server");
+                        //System.out.println("is Client already connected to Server "+clientConnect.isConnected());
+                        clientConnect = new Socket(customIP, customPort);
+                        //System.out.println("is Client already connected to Server "+clientConnect.isConnected());
+
+                        PrintWriter out = new PrintWriter(clientConnect.getOutputStream(), true);
+
+                        BufferedReader in
+                                = new BufferedReader(
+                                        new InputStreamReader(clientConnect.getInputStream()));
+
+                        String userInput = "Hello";
+
+                        //out.println(stdIn.read());
+                        out.println("Hello");
+                        ReceiveMsgFromServer();
+                        //System.out.println("echo: " + in.readLine());
+                    } catch (IOException ex) {
+                        Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            };
+            one.start();
+        }
 
     }
 
@@ -776,6 +994,9 @@ public class ClueGameUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -784,6 +1005,7 @@ public class ClueGameUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLayeredPane jLayeredPane5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -799,13 +1021,16 @@ public class ClueGameUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;
     // End of variables declaration//GEN-END:variables
