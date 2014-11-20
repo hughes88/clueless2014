@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Server API</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>Defining the REST API
+
+            <p>I. The Clueless's clients will require the services bellow:
+            <ol>
+
+<li>Create a player by name (or ID)
+
+<li>Delete a player by name (or ID)
+
+<li>Update a player location by {name and location}
+
+<li>Get the next validation location based on the player current location {name and location} 
+            </ol>
+
+<p>II. Based on these requirements, the server will provide REST APIs for the services:
+<ol>
+ <li>/api/player/{name}
+   <br>Returns new player name and init location
+
+  <li> /api/player/1
+   <br> Delete  player identified by id (employee 1 in this case)
+
+  <li>  /api/player/1/update
+  <br> Update player location
+
+  <li> /api/player/1/nextvalidposition
+  <br>  Returns all validation location (employee 1 in this case)
+</ol>
+</p>
+</div>
+    </body>
+</html>
