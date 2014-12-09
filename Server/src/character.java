@@ -13,7 +13,7 @@ public class character {
 	public ArrayList<String> moves = new ArrayList<String>();
 	public boolean active = true;
 	public boolean canmove = true;
-	public String name;
+	public static String name;
 	public String cluecharacter;
 	public int x2;
 	public int y2;

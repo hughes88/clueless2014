@@ -62,14 +62,27 @@ public class mainclue {
 				boolean again = false;
 				scarlet.setcanmove();
 				//get all valid moves to send to player
+				//send info to player(client needs to pull game state data)
 				movelocations=game.validmovelocations(scarlet.returncurrentposition());
-				String stat=game.getgamestatus(scarlet.returncharname(),scarlet.getallvalidmoves(movelocations),
+				game.setgamestatus(scarlet.returncharname(),scarlet.getallvalidmoves(movelocations),
 						scarlet.getplayerdata(), mustard.getplayerdata(), 
 						green.getplayerdata(), white.getplayerdata(), peacock.getplayerdata(),
 						plum.getplayerdata());
-				System.out.println(stat);
-				//send info to player - stub
 				//wait for player's response - stub (sit in loop, get response, parse it)
+				int go = 0;
+				String clientdata=null;
+				while(clientdata == null){
+					System.out.println("currentyl empty");
+					if(go > 5){
+						clientdata = "test";
+					}
+					else{
+						clientdata = game.getclientdata();
+					}
+					go++;
+				}
+				game.setclientdata();
+				
 				//based on response do 1 of 3 things, assume json has hash of somesort
 				String playerchoice = "move";
 				String newlocation = "0,4";
@@ -108,11 +121,11 @@ public class mainclue {
 				if(again){
 					again = false;
 					//send info to player - stub
-					String stat2=game.getgamestatus(scarlet.returncharname(),scarlet.getallvalidmoves(movelocations),
+					movelocations=game.validmovelocations(scarlet.returncurrentposition());
+					game.setgamestatus(user,scarlet.getallvalidmoves(movelocations),
 							scarlet.getplayerdata(), mustard.getplayerdata(), 
 							green.getplayerdata(), white.getplayerdata(), peacock.getplayerdata(),
 							plum.getplayerdata());
-					System.out.println(stat2);
 					//wait for player's response - stub (sit in loop, get response, parse it)
 					//can only be suggestion or accusation
 					String playerchoice2 = "suggestion";

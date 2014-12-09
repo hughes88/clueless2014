@@ -21,6 +21,9 @@ public class clue {
 	public boolean[][] board = new boolean[5][5];
 	public boolean playgame = true;
 	public String winner;
+	public static String gamestatus;
+	public static String clientdata;
+	
 	
 	//decide who did the murder
 	//pick 1 room, weapon and person from all possible values return string array
@@ -254,8 +257,20 @@ public class clue {
 		else { return false;}
 	}
 
-    @SuppressWarnings("unchecked")
-	String getgamestatus (String charname, ArrayList<String> currentpersonmoves, Map<String,String> mscarlet, Map<String,String> cmustard,
+	public static String getgamestatus() {
+		return gamestatus;
+	}
+    
+	String getclientdata(){
+		return clientdata;
+	}
+	
+	void setclientdata() {
+		clientdata=null;
+	}
+	
+	@SuppressWarnings("unchecked")	
+    void setgamestatus (String charname, ArrayList<String> currentpersonmoves, Map<String,String> mscarlet, Map<String,String> cmustard,
     		Map<String,String> mgreen, Map<String,String> mwhite, 
     		Map<String,String> mpeacock, Map<String,String> pplum){ 	
     	/*	String json1 = JSONValue.toJSONString(mscarlet);
@@ -296,8 +311,8 @@ public class clue {
     	state.put("move_state",currentplayer);
     	state.put("players",array1);
     	//System.out.println(state);
-    	String yes = JSONValue.toJSONString(state);
-    	return yes;
+    	gamestatus = JSONValue.toJSONString(state);
+    	
     }
 
 }
