@@ -12,6 +12,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -28,6 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Scanner;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -35,8 +37,11 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.TransferHandler;
 import javax.swing.border.Border;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  *
@@ -48,7 +53,18 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
     public static BufferedReader stdIn; //used for sending test input to server
     public static String identifyServer;
     public static javax.swing.JLabel player = new JLabel();
+    public static javax.swing.JLabel player2 = new JLabel();
+    public static javax.swing.JLabel player3 = new JLabel();
+    public static javax.swing.JLabel player4 = new JLabel();
+    public static javax.swing.JLabel player5 = new JLabel();
+    public static javax.swing.JLabel player6 = new JLabel();
+    public static javax.swing.JLabel mycard1 = new JLabel();
+    public static javax.swing.JLabel mycard2 = new JLabel();
+    public static javax.swing.JLabel mycard3 = new JLabel();
+    public int previous_room_x;
+    public int previous_room_y;
     public JPanel gameBoard;
+    public JerseyClient player_connection;
     public int xAdjustment;
     public int yAdjustment;
 
@@ -73,10 +89,9 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         LoginPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jLabel2 = new javax.swing.JLabel();
         jToggleButton3 = new javax.swing.JToggleButton();
         jLabel12 = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
         CharacterSelectionPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jToggleButton4 = new javax.swing.JToggleButton();
@@ -92,18 +107,6 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         jRadioButton4 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton6 = new javax.swing.JRadioButton();
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -117,9 +120,28 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         jLayeredPane5 = new javax.swing.JLayeredPane();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jToggleButton2 = new javax.swing.JToggleButton();
+        jButton6 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Clueless");
+        setBackground(new java.awt.Color(0, 0, 0));
         setMaximumSize(new java.awt.Dimension(2147483647, 400));
         setResizable(false);
 
@@ -134,9 +156,9 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Username");
+        jLabel1.setText("Name:");
         LoginPanel.add(jLabel1);
-        jLabel1.setBounds(20, 600, 58, 14);
+        jLabel1.setBounds(20, 580, 35, 14);
 
         jTextField2.setMaximumSize(new java.awt.Dimension(6, 20));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -145,22 +167,9 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
             }
         });
         LoginPanel.add(jTextField2);
-        jTextField2.setBounds(100, 590, 110, 20);
+        jTextField2.setBounds(90, 570, 110, 30);
 
-        jPasswordField1.setForeground(new java.awt.Color(51, 0, 255));
-        jPasswordField1.setEchoChar('*');
-        jPasswordField1.setMinimumSize(new java.awt.Dimension(25, 20));
-        jPasswordField1.setName(""); // NOI18N
-        LoginPanel.add(jPasswordField1);
-        jPasswordField1.setBounds(100, 620, 110, 20);
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Password");
-        LoginPanel.add(jLabel2);
-        jLabel2.setBounds(20, 624, 54, 20);
-
-        jToggleButton3.setText("Login");
+        jToggleButton3.setText("Start/Join a game");
         jToggleButton3.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton3ItemStateChanged(evt);
@@ -172,7 +181,7 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
             }
         });
         LoginPanel.add(jToggleButton3);
-        jToggleButton3.setBounds(120, 640, 70, 23);
+        jToggleButton3.setBounds(40, 610, 130, 23);
 
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/logo-login3.jpg"))); // NOI18N
         jLabel12.setText("jLabel12");
@@ -181,6 +190,8 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         jLabel12.setPreferredSize(new java.awt.Dimension(729, 670));
         LoginPanel.add(jLabel12);
         jLabel12.setBounds(0, 0, 729, 670);
+        LoginPanel.add(jProgressBar1);
+        jProgressBar1.setBounds(40, 640, 146, 14);
 
         jPanel3.add(LoginPanel, "card4");
 
@@ -326,6 +337,260 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
 
         jPanel3.add(CharacterSelectionPanel, "card5");
 
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel2.setMaximumSize(new java.awt.Dimension(720, 400));
+        jPanel2.setPreferredSize(new java.awt.Dimension(729, 670));
+
+        jPanel4.setBackground(new java.awt.Color(204, 102, 0));
+
+        jTable1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"Mrs.White", null},
+                {"Mr. Plum", null},
+                {"Miss Scarlet", null},
+                {"Mr. Green", null},
+                {"Mrs.Peacock", null},
+                {"Col. Mustard", null}
+            },
+            new String [] {
+                "SUSPECTS", ""
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        jTable3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"Hall", null},
+                {"Lounge", null},
+                {"Library", null},
+                {"Kitchen", null},
+                {"Dining Room", null},
+                {"Billiard Room", null},
+                {"Study", null},
+                {"Ballroom", null},
+                {"Conservatory", null}
+            },
+            new String [] {
+                "ROOMS", "P1"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable3);
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel10.setText("Scorecard");
+
+        jTable2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"CandleStick", null},
+                {"Knife", null},
+                {"LeadPipe", null},
+                {"Revolver", null},
+                {"Rope", null},
+                {"Wrench", null}
+            },
+            new String [] {
+                "WEAPONS", ""
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTable2);
+
+        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
+
+        javax.swing.GroupLayout jLayeredPane5Layout = new javax.swing.GroupLayout(jLayeredPane5);
+        jLayeredPane5.setLayout(jLayeredPane5Layout);
+        jLayeredPane5Layout.setHorizontalGroup(
+            jLayeredPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 701, Short.MAX_VALUE)
+        );
+        jLayeredPane5Layout.setVerticalGroup(
+            jLayeredPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLayeredPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLayeredPane5)
+                .addContainerGap())
+        );
+
+        jLayeredPane5.addMouseListener(this);
+        jLayeredPane5.addMouseMotionListener(this);
+        jLayeredPane5.add(player,JLayeredPane.DRAG_LAYER);
+
+        jButton2.setText("Make Accusation");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("(unused) jButton4");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Make A Suggestion");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cards/Ballroom.PNG"))); // NOI18N
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cards/Candlestick.PNG"))); // NOI18N
+        jLabel15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel15MouseClicked(evt);
+            }
+        });
+
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/characterImages/ColonelMustard.png"))); // NOI18N
+        jLabel16.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel16MouseClicked(evt);
+            }
+        });
+
+        jToggleButton2.setText("jToggleButton2");
+        jToggleButton2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jToggleButton2ItemStateChanged(evt);
+            }
+        });
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Move");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButton2)
+                                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jToggleButton2)
+                                    .addComponent(jButton4)
+                                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel10)))
+                .addGap(11, 11, 11)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel16))
+                .addContainerGap(3138, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(jToggleButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6)
+                .addGap(3, 3, 3))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(59, 59, 59)
+                .addComponent(jLabel2)
+                .addGap(58, 58, 58)
+                .addComponent(jLabel15)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel16)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel3.add(jPanel2, "card3");
+
         jPanel1.setMaximumSize(new java.awt.Dimension(32767, 400));
         jPanel1.setPreferredSize(new java.awt.Dimension(729, 670));
 
@@ -427,267 +692,6 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
 
         jPanel3.add(jPanel1, "card2");
 
-        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel2.setMaximumSize(new java.awt.Dimension(32767, 400));
-        jPanel2.setPreferredSize(new java.awt.Dimension(729, 670));
-
-        jTable1.setBackground(new java.awt.Color(153, 255, 0));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "SUSPECTS", "P1", "P2", "P3", "P4", "P5", "P6"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(80);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(80);
-            jTable1.getColumnModel().getColumn(1).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(40);
-            jTable1.getColumnModel().getColumn(1).setMaxWidth(40);
-            jTable1.getColumnModel().getColumn(2).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(40);
-            jTable1.getColumnModel().getColumn(2).setMaxWidth(40);
-            jTable1.getColumnModel().getColumn(3).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(40);
-            jTable1.getColumnModel().getColumn(3).setMaxWidth(40);
-            jTable1.getColumnModel().getColumn(4).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(4).setPreferredWidth(40);
-            jTable1.getColumnModel().getColumn(4).setMaxWidth(40);
-            jTable1.getColumnModel().getColumn(5).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(5).setPreferredWidth(40);
-            jTable1.getColumnModel().getColumn(5).setMaxWidth(40);
-            jTable1.getColumnModel().getColumn(6).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(6).setPreferredWidth(40);
-            jTable1.getColumnModel().getColumn(6).setMaxWidth(40);
-        }
-
-        jTable3.setBackground(new java.awt.Color(153, 255, 0));
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "ROOMS", "P1", "P2", "P3", "P4", "P5", "P6"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane3.setViewportView(jTable3);
-        if (jTable3.getColumnModel().getColumnCount() > 0) {
-            jTable3.getColumnModel().getColumn(0).setMinWidth(80);
-            jTable3.getColumnModel().getColumn(0).setPreferredWidth(80);
-            jTable3.getColumnModel().getColumn(0).setMaxWidth(80);
-            jTable3.getColumnModel().getColumn(1).setMinWidth(40);
-            jTable3.getColumnModel().getColumn(1).setPreferredWidth(40);
-            jTable3.getColumnModel().getColumn(1).setMaxWidth(40);
-            jTable3.getColumnModel().getColumn(2).setMinWidth(40);
-            jTable3.getColumnModel().getColumn(2).setPreferredWidth(40);
-            jTable3.getColumnModel().getColumn(2).setMaxWidth(40);
-            jTable3.getColumnModel().getColumn(3).setMinWidth(40);
-            jTable3.getColumnModel().getColumn(3).setPreferredWidth(40);
-            jTable3.getColumnModel().getColumn(3).setMaxWidth(40);
-            jTable3.getColumnModel().getColumn(4).setMinWidth(40);
-            jTable3.getColumnModel().getColumn(4).setPreferredWidth(40);
-            jTable3.getColumnModel().getColumn(4).setMaxWidth(40);
-            jTable3.getColumnModel().getColumn(5).setMinWidth(40);
-            jTable3.getColumnModel().getColumn(5).setPreferredWidth(40);
-            jTable3.getColumnModel().getColumn(5).setMaxWidth(40);
-            jTable3.getColumnModel().getColumn(6).setMinWidth(40);
-            jTable3.getColumnModel().getColumn(6).setPreferredWidth(40);
-            jTable3.getColumnModel().getColumn(6).setMaxWidth(40);
-        }
-
-        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel10.setText("Scorecard");
-
-        jTable2.setBackground(new java.awt.Color(153, 255, 0));
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "WEAPONS", "P1", "P2", "P3", "P4", "P5", "P6"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setMinWidth(80);
-            jTable2.getColumnModel().getColumn(0).setPreferredWidth(80);
-            jTable2.getColumnModel().getColumn(0).setMaxWidth(80);
-            jTable2.getColumnModel().getColumn(1).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(1).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(1).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(2).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(2).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(2).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(3).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(3).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(3).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(4).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(4).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(4).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(5).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(5).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(5).setMaxWidth(40);
-            jTable2.getColumnModel().getColumn(6).setMinWidth(40);
-            jTable2.getColumnModel().getColumn(6).setPreferredWidth(40);
-            jTable2.getColumnModel().getColumn(6).setMaxWidth(40);
-        }
-
-        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
-
-        javax.swing.GroupLayout jLayeredPane5Layout = new javax.swing.GroupLayout(jLayeredPane5);
-        jLayeredPane5.setLayout(jLayeredPane5Layout);
-        jLayeredPane5Layout.setHorizontalGroup(
-            jLayeredPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 701, Short.MAX_VALUE)
-        );
-        jLayeredPane5Layout.setVerticalGroup(
-            jLayeredPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 352, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLayeredPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLayeredPane5)
-                .addContainerGap())
-        );
-
-        jLayeredPane5.addMouseListener(this);
-        jLayeredPane5.addMouseMotionListener(this);
-        jLayeredPane5.add(player,JLayeredPane.DRAG_LAYER);
-
-        jButton2.setText("Make Accusation");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton4.setText("jButton4");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(323, 323, 323)
-                        .addComponent(jLabel10))
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                            .addGap(50, 50, 50)
-                            .addComponent(jButton2)
-                            .addGap(75, 75, 75)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton4))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(33, 33, 33)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel10)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jButton4)
-                                .addGap(33, 33, 33)))
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jButton2)))
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jPanel3.add(jPanel2, "card3");
-
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
         pack();
@@ -697,29 +701,67 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         if (player == null) {
             return;
         }
+        // Scanner scan=new Scanner(System.in);
+        int valid = 0;
+
         player.setLocation(me.getX() + xAdjustment, me.getY() + yAdjustment);
+
     }
 
     /*
-     **  Drop the chess piece back onto the chess board
+     **  Drop the player's piece back onto the game board
      */
     public void mouseReleased(MouseEvent e) {
+
+        System.out.println("Mouse clicked/released on chosen room" + e.getSource().toString());
+
         if (player == null) {
             return;
         }
+
+        //validate move by sending move request to Server before allowing move
+        int valid = 1;
+
         player.setVisible(false);
+
         Component c = jPanel5.findComponentAt(e.getX(), e.getY());
 
         if (c instanceof JLabel) {
             Container parent = c.getParent();
-            parent.remove(0);
-            parent.add(player);
+            if (parent.getComponentCount() == 0) {
+                System.out.println("------");
+                //parent.remove(0);
+                parent.add(player);
+
+            } else {
+                System.out.println("%%%%%");
+                parent.add(player);
+                parent.validate();
+                //return;
+            }
+
         } else {
             Container parent = (Container) c;
-            parent.add(player);
-        }
+            if (parent.getComponentCount() == 1) {
+                System.out.println("*****");
+                return;
+            } else {
+                System.out.println("&&&&&");
+                parent.add(player);
+            }
 
+        }
+        if (valid != 0) {
+            System.out.println("Player move allowed" + " x:" + e.getX() + "y: " + e.getY());
+            System.out.println("Previous x:" + previous_room_x + "  Y:" + previous_room_y);
+            player.setLocation(previous_room_x, previous_room_y);
+            // player.setLocation(e.getX(),e.getY());
+        } else {
+
+        }
+        player.setHorizontalAlignment(SwingConstants.CENTER);
         player.setVisible(true);
+
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -736,8 +778,11 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
 
     public void mousePressed(MouseEvent e) {
         //player=null;
+        Component j = e.getComponent();
+        //System.out.println("Click component is : \n"+j.toString()+"\n "+(e.getSource().toString());
         Component c = gameBoard.findComponentAt(e.getX(), e.getY());
         if (c instanceof JPanel) {
+            System.out.println("No character chosen");
             return;
         }
 
@@ -745,6 +790,8 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         xAdjustment = parentLocation.x - e.getX();
         yAdjustment = parentLocation.y - e.getY();
         player = (JLabel) c;
+        previous_room_x = parentLocation.x + xAdjustment;
+        previous_room_y = parentLocation.y + yAdjustment;
         player.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
         player.setSize(player.getWidth(), player.getHeight());
         jLayeredPane5.add(player, JLayeredPane.DRAG_LAYER);
@@ -774,13 +821,16 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        System.out.println("Button Pressed");
-        try {
 
-            ConnectToServer(jTextField3.getText(), Integer.parseInt(jTextField4.getText()));
-        } catch (IOException ex) {
-            Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /*System.out.println("Button Pressed");
+         try {
+
+         ConnectToServer(jTextField3.getText(), Integer.parseInt(jTextField4.getText()));
+         } catch (IOException ex) {
+         Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
+         }
+         */
+        //player_connection=new JerseyClient();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -794,28 +844,171 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
 
     private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
         // TODO add your handling code here:
+        CreateBoard();
     }//GEN-LAST:event_jToggleButton4ActionPerformed
 
     private void jToggleButton3ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton3ItemStateChanged
         // TODO add your handling code here:
+        System.out.println("Start Game button Pressed");
         itemStateChanged(evt);
+
+        player_connection = new JerseyClient();
+        //player_connection
+
     }//GEN-LAST:event_jToggleButton3ItemStateChanged
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        String s=(String)JOptionPane.showInputDialog(this,"Who do you think is the murderer?","Solved It???",JOptionPane.PLAIN_MESSAGE);
+        String s = (String) JOptionPane.showInputDialog(this, "Who do you think is the murderer?", "Solved It???", JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        
-      JerseyClient client=new JerseyClient();  
+
+        //JerseyClient client=new JerseyClient();  
+        System.out.println("Player is at point" + player.getParent().getLocation());
+        System.out.println("Number of components on board:" + gameBoard.getComponentCount());
+        /* for (int i=0;i<5;i++){
+         System.out.println("i="+i);
+         for (int j=0;j<5;j++){
+         System.out.println("j="+j);
+         if (((JPanel) gameBoard.getComponentAt(i,j)).getComponentCount()==1) {
+         System.out.println("Somebody is in "+((JPanel) gameBoard.getComponentAt(i,j)).getName());
+                
+         }
+         else{
+                
+         }
+            
+         }
+          
+         }*/
+        for (int i = 0; i < 24; i++) {
+            //System.out.println(gameBoard.getComponent(i).getName());
+            if (((JPanel) gameBoard.getComponent(i)).getComponentCount() == 1) {
+                System.out.println("Somebody is in room" + ((JPanel) gameBoard.getComponent(i)).getName());
+            }
+        }
+        //System.out.println("Number of components :"+((JPanel) gameBoard.getComponentAt(2,2)).getComponentCount());
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        //Make A suggestion
+        Object[] list_characters = {"MR.Green", "Mr.Peacock", "Mrs.White", "Mr.Plum", "Scarlet", "Colonel Mustard"};
+        Object[] list_weapons = {"Candlestick", "Knife", "Wrench", "Lead Pipe", "Revolver", "Rope"};
+        String m = (String) JOptionPane.showInputDialog(this, "Who do you think is the murderer?", "Solved It???", JOptionPane.PLAIN_MESSAGE, null, list_characters, "");
+        String w = (String) JOptionPane.showInputDialog(this, "What weapon did they use?", "Solved It???", JOptionPane.PLAIN_MESSAGE, null, list_weapons, "");
+        //String w = (String) JOptionPane.showInputDialog(this, "What was the murder weapon?","", JOptionPane.PLAIN_MESSAGE);
+
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        // Gives player option to show a card to another player
+        System.out.println("jlabel2MouseClicked");
+        int option;
+        option = sendCard(evt);
+        System.out.println(option);
+
+
+    }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
+        // TODO add your handling code here:
+        int option;
+        option = sendCard(evt);
+        System.out.println(option);
+    }//GEN-LAST:event_jLabel15MouseClicked
+
+    private void jLabel16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel16MouseClicked
+        // TODO add your handling code here:
+        int option;
+        option = sendCard(evt);
+        System.out.println(option);
+    }//GEN-LAST:event_jLabel16MouseClicked
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jToggleButton2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jToggleButton2ItemStateChanged
+        // TODO add your handling code here:
+        itemStateChanged(evt);
+        System.out.println("Go to test page");
+    }//GEN-LAST:event_jToggleButton2ItemStateChanged
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        //Move Button Pressed
+
+        // check game-state to determine available moves
+        //new JSONObject("{"players":[{"position":"0,3","name":null,"active":"true","cards":"MR GREEN,CANDLESTICK,BALLROOM","character":"scarlet"},{"position":"1,4","name":null,"active":"true","cards":"PROFESSOR PLUM,BILLARD ROOM,ROPE","character":"mustard"},{"position":"4,3","name":null,"active":"true","cards":"DINING ROOM,REVOLVER,WRENCH","character":"white"},{"position":"4,1","name":null,"active":"true","cards":"LIBRARY,COLONEL MUSTARD,STUDY","character":"green"},{"position":"3,0","name":null,"active":"true","cards":"MISS SCARLET,MRS PEACOCK,KNIFE","character":"peacock"},{"position":"1,0","name":null,"active":"true","cards":"HALL,CONSERVATORY,LOUNGE","character":"plum"}],"move_state":{"player":"scarlet","moves":[["[0,4, 0,2]","accusation"]]},"winner":null}");
+        try {
+            JSONArray available_moves;
+            //String available_moves;
+            String[] available_moves_array;
+            Object[] available_moves_object = null;
+            available_moves = player_connection.currentgame_state.getJSONObject("move_state").getJSONArray("moves");
+            //available_moves_array = available_moves.split("]");
+            System.out.println(available_moves.length());
+            for (int i = 0; i < available_moves.length(); i++) {
+                System.out.println(available_moves.get(i));
+                //available_moves_object[i] = 
+            }
+            //String m = (String) JOptionPane.showInputDialog(this, "Where would you live to move?", "Select your move", JOptionPane.PLAIN_MESSAGE, null, available_moves_object, "");
+        } catch (JSONException ex) {
+            Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //let user select which room ,from options presented, to move into
+        //update server with new players location
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void initializeMyHand() {
+        //get player's hand from game state data
+        JSONArray card_hand;
+        String[] card_hand_object = null;
+        try {
+            card_hand = player_connection.currentgame_state.getJSONArray("players").getJSONObject(player_connection.game_slot).getJSONArray("cards");
+            for (int i = 0; i < card_hand.length(); i++) {
+                card_hand_object[i] = card_hand.get(i).toString();
+
+            }
+            mycard1.setText(card_hand_object[1]); //card 1
+            mycard2.setText(card_hand_object[2]); //card 2
+            mycard3.setText(card_hand_object[3]); //card 3
+            System.out.println(mycard1.getText());
+            System.out.println(mycard2.getText());
+            System.out.println(mycard3.getText());
+        } catch (JSONException ex) {
+            Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // player.connection.currentgame_state.
+
+    }
+
+    private int sendCard(MouseEvent evt) {
+
+        return JOptionPane.showConfirmDialog(this, "Would you like to send this card to player");
+    }
+
     private void CreateBoard() {
+
+        //resize and center frame to fit all components of game(board,scorecard,buttons,etc)
+        this.setSize(1030, 670);
+        Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
+        this.setLocation(x, y);
+
         NonCornerRoom NonCornerRoom_current;
         // Board gameBoard = new Board();
-
+        ArrayList<String> RoomsAndHallways = new ArrayList<>(Arrays.asList("STUDY", "HALLWAY1", "HALL", "HALLWAY2", "LOUNGE",
+                "HALLWAY3", "BLANK", "HALLWAY4", "BLANK", "HALLWAY5",
+                "LIBRARY", "HALLWAY6", "BILLIARD ROOM", "HALLWAY7", "DINING ROOM",
+                "HALLWAY8", "BLANK", "HALLWAY9", "BLANK", "HALLWAY10",
+                "CONSERVATORY", "HALLWAY11", "BALL ROOM", "HALLWAY12", "KITCHEN"));
         ArrayList<String> RoomNames = new ArrayList<>(Arrays.asList("Hall", "Library", "BillardRoom", "BallRoom", "DiningRoom"));
         //RoomNames=["Hall","Library","BillardRoom","BallRoom","DiningRoom"];
         ArrayList<NonCornerRoom> NonCornerRooms = new ArrayList<>(Arrays.asList(
@@ -831,49 +1024,267 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
         }
 
         gameBoard = new JPanel();
-        jLayeredPane5.add(gameBoard, JLayeredPane.DEFAULT_LAYER);
+        JPanel gameBoard_background = new JPanel();
+        gameBoard_background.setLayout(new BorderLayout(1, 1));
+        gameBoard_background.setPreferredSize(new Dimension(701, 590));
+        gameBoard_background.setBounds(0, 0, 701, 590);
+        jLayeredPane5.add(gameBoard, new Integer(1));
         gameBoard.setLayout(new GridLayout(5, 5));
-        gameBoard.setPreferredSize(new Dimension(701, 352));
-        gameBoard.setBounds(0, 0, 701, 352);
-        Border roomBoarder=BorderFactory.createLineBorder(Color.black, 2);
+        gameBoard.setOpaque(false);
+        gameBoard.setPreferredSize(new Dimension(701, 590));
+        gameBoard.setBounds(0, 0, 701, 590);
+        Border roomBoarder = BorderFactory.createLineBorder(Color.white, 2);
         //draw rooms onto board
         for (int i = 0; i < 25; i++) {
             JPanel room_square = new JPanel(new BorderLayout());
 
+            System.out.println(i);
+            room_square.setName(RoomsAndHallways.get(i));
+
+            System.out.println(RoomsAndHallways.get(i));
             gameBoard.add(room_square);
 
             int row = (i / 12) % 2;
             if (row == 0) {
-                room_square.setBackground(i % 2 == 0 ? Color.white : Color.gray);
-                room_square.setBorder(roomBoarder);
+                //room_square.setBackground(i % 2 == 0 ? Color.white : Color.gray);
+                //room_square.setBorder(roomBoarder);
+                room_square.setOpaque(false);
+
                 //room_square.
                 //room_square.add(new JLabel("Room# "+i));
             } else {
-                room_square.setBackground(i % 2 == 0 ? Color.gray : Color.white);
-                room_square.setBorder(roomBoarder);
+                //room_square.setBackground(i % 2 == 0 ? Color.gray : Color.white);
+                //room_square.setBorder(roomBoarder);
+                room_square.setOpaque(false);
                 //room_square.add(new JLabel("Room# "+i));
             }
 
         }
 
-        //add Players to board
-        ImageIcon player_icon = new ImageIcon(getClass().getResource("/resources/game-ball.png"));
-        JPanel panel = (JPanel) gameBoard.getComponent(0);
-
+        //add Players to board (use "for" statement later to reduce lines of code)
+        ImageIcon player_icon = new ImageIcon(getClass().getResource("/resources/scarletphoto.png"), "MissScarlett");
+        JPanel panel = (JPanel) gameBoard.getComponent(3); //MS SCARLET starting position
         player.setIcon(player_icon);
-        //jPanel5.repaint();
-        panel.add(player);
-        panel.repaint();
-        jLayeredPane5.add(panel, JLayeredPane.DRAG_LAYER);
-        
-        
+        player.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(player, SwingConstants.CENTER);
+
+        ImageIcon player2_icon = new ImageIcon(getClass().getResource("/resources/mustardphoto.png"), "Mustard");
+        JPanel panel2 = (JPanel) gameBoard.getComponent(9); //ColMustard starting position
+        player2.setIcon(player2_icon);
+        player2.setHorizontalAlignment(SwingConstants.CENTER);
+        panel2.add(player2, SwingConstants.CENTER);
+        //panel.add(player, SwingConstants.CENTER);
+
+        ImageIcon player3_icon = new ImageIcon(getClass().getResource("/resources/plumphoto.png"), "ProfessorPlum");
+        JPanel panel3 = (JPanel) gameBoard.getComponent(5); //Plum starting position
+        player3.setIcon(player3_icon);
+        player3.setHorizontalAlignment(SwingConstants.CENTER);
+        panel3.add(player3, SwingConstants.CENTER);
+
+        ImageIcon player4_icon = new ImageIcon(getClass().getResource("/resources/peacockphoto.png"), "MsPeacock");
+        JPanel panel4 = (JPanel) gameBoard.getComponent(15); //Peacock starting position
+        player4.setIcon(player4_icon);
+        player4.setHorizontalAlignment(SwingConstants.CENTER);
+        panel4.add(player4, SwingConstants.CENTER);
+
+        ImageIcon player5_icon = new ImageIcon(getClass().getResource("/resources/greenphoto.png"), "Mr.Green");
+        JPanel panel5 = (JPanel) gameBoard.getComponent(21); //MrGreen starting position
+        player5.setIcon(player5_icon);
+        player5.setHorizontalAlignment(SwingConstants.CENTER);
+        panel5.add(player5, SwingConstants.CENTER);
+
+        ImageIcon player6_icon = new ImageIcon(getClass().getResource("/resources/whitephoto.png"), "Ms.White");
+        JPanel panel6 = (JPanel) gameBoard.getComponent(23); //MsWhite starting position
+        player6.setIcon(player6_icon);
+        player6.setHorizontalAlignment(SwingConstants.CENTER);
+        panel6.add(player6, SwingConstants.CENTER);
+
+        ImageIcon room_icon = new ImageIcon(getClass().getResource("/resources/newgamebackground-6.png"));
+        JLabel room_icon_label = new JLabel();
+        room_icon_label.setIcon(room_icon);
+
+        gameBoard_background.add(room_icon_label);
+
+        jLayeredPane5.add(gameBoard_background, new Integer(0));
+        gameBoard_background.setVisible(true);
+        room_icon_label.setVisible(true);
+//jLayeredPane5.add(room_icon_label,JLayeredPane.DRAG_LAYER);
+        //jLayeredPane5.moveToFront(room_icon_label);
+
         //jPanel5.add(jLayeredPane1);
-
         //jPanel5.repaint();
-        jPanel5.setVisible(true);
+        //jPanel5.setVisible(true);
+        //System.out.println("JToggleButton2 Action Performed");
+        packageGameState();
 
-        System.out.println("JToggleButton2 Action Performed");
         //jPanel3.add(gameBoard, "card4");
+    }
+
+    public String MapCoordsToRoom(String coord) {
+        //String coord =coordinate values of room on server (ex.(0,4)="Lounge"
+        String room = "";
+        switch (coord) {
+            case "0,0":
+                room = "STUDY";
+                break;
+            case "0,1":
+                room = "HALLWAY1";
+                break;
+            case "0,2":
+                room = "HALL";
+                break;
+            case "0,3":
+                room = "HALLWAY2";
+                break;
+            case "0,4":
+                room = "LOUNGE";
+                break;
+            case "1,0":
+                room = "HALLWAY3";
+                break;
+            case "1,1":
+                room = "BLANK";
+                break;
+            case "1,2":
+                room = "HALLWAY4";
+                break;
+            case "1,3":
+                room = "BLANK";
+                break;
+            case "1,4":
+                room = "HALLWAY5";
+                break;
+            case "2,0":
+                room = "LIBRARY";
+                break;
+            case "2,1":
+                room = "HALLWAY6";
+                break;
+            case "2,2":
+                room = "BILLIARD ROOM";
+                break;
+            case "2,3":
+                room = "HALLWAY7";
+                break;
+            case "2,4":
+                room = "DINING ROOM";
+                break;
+            case "3,0":
+                room = "HALLWAY8";
+                break;
+            case "3,1":
+                room = "BLANK";
+                break;
+            case "3,2":
+                room = "HALLWAY9";
+                break;
+            case "3,3":
+                room = "BLANK";
+                break;
+            case "3,4":
+                room = "HALLWAY10";
+                break;
+            case "4,0":
+                room = "CONSERVATORY";
+                break;
+            case "4,1":
+                room = "HALLWAY11";
+                break;
+            case "4,2":
+                room = "BALLROOM";
+                break;
+            case "4,3":
+                room = "HALLWAY12";
+                break;
+            case "4,4":
+                room = "KITCHEN";
+                break;
+        }
+        return room;
+
+    }
+
+    public String MapRoomToCoords(String room) {
+        //String room =string values of room on server (ex."Lounge"="0,4"
+        String coord = "";
+        switch (room) {
+            case "STUDY":
+                coord = "0,0";
+                break;
+            case "HALLWAY1":
+                coord = "0,1";
+                break;
+            case "HALL":
+                coord = "0,2";
+                break;
+            case "HALLWAY2":
+                coord = "0,3";
+                break;
+            case "LOUNGE":
+                coord = "0,4";
+                break;
+            case "HALLWAY3":
+                coord = "1,0";
+                break;
+            case "BLANK":
+                coord = "1,1";
+                break;
+            case "HALLWAY4":
+                coord = "1,2";
+                break;
+            case "BLANK1":
+                coord = "1,3";
+                break;
+            case "HALLWAY5":
+                coord = "1,4";
+                break;
+            case "LIBRARY":
+                coord = "2,0";
+                break;
+            case "HALLWAY6":
+                coord = "2,1";
+                break;
+            case "BILLIARD ROOM":
+                coord = "2,2";
+                break;
+            case "HALLWAY7":
+                coord = "2,3";
+                break;
+            case "DINING ROOM":
+                coord = "2,4";
+                break;
+            case "HALLWAY8":
+                coord = "3,0";
+                break;
+            case "BLANK2":
+                coord = "3,1";
+                break;
+            case "HALLWAY9":
+                coord = "3,2";
+                break;
+            case "BLANK3":
+                coord = "3,3";
+                break;
+            case "HALLWAY10":
+                coord = "3,4";
+                break;
+            case "CONSERVATORY":
+                coord = "4,0";
+                break;
+            case "HALLWAY11":
+                coord = "4,1";
+                break;
+            case "BALLROOM":
+                coord = "4,2";
+                break;
+            case "HALLWAY12":
+                coord = "4,3";
+                break;
+            case "KITCHEN":
+                coord = "4,4";
+                break;
+        }
+        return coord;
 
     }
 
@@ -911,6 +1322,9 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
             java.util.logging.Logger.getLogger(ClueGameUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -933,6 +1347,18 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
             }
         } catch (IOException ex) {
             Logger.getLogger(ClueGameUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void packageGameState() {
+        System.out.println("Number of pieces on gameboard: " + gameBoard.getComponentCount());
+        for (int i = 1; i < gameBoard.getComponentCount(); i++) {
+            JPanel room = (JPanel) gameBoard.getComponent(i);
+            if (room.getComponentCount() != 0) {
+                System.out.println(room.getComponent(0));
+            }
+
         }
 
     }
@@ -962,13 +1388,17 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
 
             Server connection = new Server();
             Server_running = true;
+            final String Server_IP = customIP;
+            final int Server_port = customPort;
+
             Thread one = new Thread() {
                 public void run() {
                     try {
                         //connection.AcceptNewConnection("10.12.12.1");
+                        //final String customIP=customIP;
                         System.out.print("Connecting to Server");
                         //System.out.println("is Client already connected to Server "+clientConnect.isConnected());
-                        clientConnect = new Socket(customIP, customPort);
+                        clientConnect = new Socket(Server_IP, Server_port);
                         //System.out.println("is Client already connected to Server "+clientConnect.isConnected());
 
                         PrintWriter out = new PrintWriter(clientConnect.getOutputStream(), true);
@@ -1002,12 +1432,16 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1022,7 +1456,7 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
@@ -1038,10 +1472,11 @@ public class ClueGameUI extends javax.swing.JFrame implements MouseMotionListene
     private javax.swing.JTable jTable3;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    public static javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;
     // End of variables declaration//GEN-END:variables
